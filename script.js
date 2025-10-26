@@ -1,10 +1,8 @@
-import React from 'react';
-import CalculatorCard from '../components/CalculatorCard';
-import './CalculatorPage.css';
+document.addEventListener('DOMContentLoaded', () => {
+    const calculatorGrid = document.getElementById('calculator-grid');
+    if (!calculatorGrid) return; // Sadece hesaplama sayfasında çalışmasını sağla
 
-const CalculatorPage = () => {
-  // Researched formulas will be passed as props to CalculatorCard components
-  const formulas = [
+    const formulas = [
     {
       title: 'Poisson\'s Ratio (General)',
       inputs: ['Transverse Strain', 'Axial Strain'],
@@ -109,24 +107,61 @@ const CalculatorPage = () => {
         },
         formulaText: 'E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]'
     }
-  ];
+    ];
 
-  return (
-    <div className="calculator-container">
-      <h1>Formula Calculator</h1>
-      <div className="calculator-grid">
-        {formulas.map((formula, index) => (
-          <CalculatorCard
-            key={index}
-            title={formula.title}
-            inputs={formula.inputs}
-            calculate={formula.calculate}
-            formulaText={formula.formulaText}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
+    formulas.forEach((formula, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-export default CalculatorPage;
+        let inputHTML = '';
+        formula.inputs.forEach((label, j) => {
+            const inputId = `input-${i}-${j}`;
+            inputHTML += `
+                <div class="input-group">
+                    <label for="${inputId}">${label}:</label>
+                    <input type="number" id="${inputId}" placeholder="Enter ${label}">
+                </div>
+            `;
+        });
+
+        card.innerHTML = `
+            <h3>${formula.title}</h3>
+            <p class="formula-text"><i>${formula.formulaText}</i></p>
+            <div class="inputs-container">${inputHTML}</div>
+            <button id="btn-${i}">Calculate</button>
+            <p class="error" id="error-${i}"></p>
+            <p class="result" id="result-${i}"></p>
+        `;
+
+        calculatorGrid.appendChild(card);
+
+        const calculateButton = document.getElementById(`btn-${i}`);
+        calculateButton.addEventListener('click', () => {
+            const inputValues = formula.inputs.map((_, j) => {
+                return document.getElementById(`input-${i}-${j}`).value;
+            });
+
+            const errorP = document.getElementById(`error-${i}`);
+            const resultP = document.getElementById(`result-${i}`);
+            errorP.textContent = '';
+            resultP.textContent = '';
+
+            if (inputValues.some(val => val === '')) {
+                errorP.textContent = 'Please fill in all input fields.';
+                return;
+            }
+            if (inputValues.some(val => isNaN(parseFloat(val)))) {
+                errorP.textContent = 'Please enter valid numbers.';
+                return;
+            }
+
+            const calculationResult = formula.calculate(inputValues);
+
+            if (typeof calculationResult === 'string') {
+                errorP.textContent = calculationResult;
+            } else {
+                resultP.textContent = `Result: ${calculationResult.toFixed(4)}`;
+            }
+        });
+    });
+});
