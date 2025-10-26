@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <header class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-logo">Auxetic Metamaterials</a>
@@ -26,164 +25,177 @@
     <main class="container">
         <h1>Formül Hesaplayıcı</h1>
         <div id="calculator-grid" class="calculator-grid">
-            <!-- All 10 cards are manually defined in HTML now -->
+
+            <div class="card">
+                <h3>Stress Definition</h3>
+                <p class="formula-text"><i>σ = F / A</i></p>
+                <div class="select-container">
+                    <label for="select-0">Calculate for: </label>
+                    <select id="select-0"></select>
+                </div>
+                <div class="inputs-container" id="inputs-0"></div>
+                <button id="btn-0">Calculate</button>
+                <p class="error" id="error-0"></p>
+            </div>
+            <div class="card">
+                <h3>Strain Definition</h3>
+                <p class="formula-text"><i>ε = ΔL / L₀</i></p>
+                <div class="select-container">
+                    <label for="select-1">Calculate for: </label>
+                    <select id="select-1"></select>
+                </div>
+                <div class="inputs-container" id="inputs-1"></div>
+                <button id="btn-1">Calculate</button>
+                <p class="error" id="error-1"></p>
+            </div>
+            <div class="card">
+                <h3>Young's Modulus (Hooke's Law)</h3>
+                <p class="formula-text"><i>E = σ / ε</i></p>
+                <div class="select-container">
+                    <label for="select-2">Calculate for: </label>
+                    <select id="select-2"></select>
+                </div>
+                <div class="inputs-container" id="inputs-2"></div>
+                <button id="btn-2">Calculate</button>
+                <p class="error" id="error-2"></p>
+            </div>
+            <div class="card">
+                <h3>Poisson's Ratio</h3>
+                <p class="formula-text"><i>ν = -ε_trans / ε_axial</i></p>
+                <div class="select-container">
+                    <label for="select-3">Calculate for: </label>
+                    <select id="select-3"></select>
+                </div>
+                <div class="inputs-container" id="inputs-3"></div>
+                <button id="btn-3">Calculate</button>
+                <p class="error" id="error-3"></p>
+            </div>
+            <div class="card">
+                <h3>Shear Modulus</h3>
+                <p class="formula-text"><i>G = τ / γ</i></p>
+                <div class="select-container">
+                    <label for="select-4">Calculate for: </label>
+                    <select id="select-4"></select>
+                </div>
+                <div class="inputs-container" id="inputs-4"></div>
+                <button id="btn-4">Calculate</button>
+                <p class="error" id="error-4"></p>
+            </div>
+            <div class="card">
+                <h3>Bulk Modulus</h3>
+                <p class="formula-text"><i>K = P / (ΔV/V)</i></p>
+                <div class="select-container">
+                    <label for="select-5">Calculate for: </label>
+                    <select id="select-5"></select>
+                </div>
+                <div class="inputs-container" id="inputs-5"></div>
+                <button id="btn-5">Calculate</button>
+                <p class="error" id="error-5"></p>
+            </div>
+            <div class="card">
+                <h3>Relation: E, G, ν</h3>
+                <p class="formula-text"><i>E = 2G(1 + ν)</i></p>
+                <div class="select-container">
+                    <label for="select-6">Calculate for: </label>
+                    <select id="select-6"></select>
+                </div>
+                <div class="inputs-container" id="inputs-6"></div>
+                <button id="btn-6">Calculate</button>
+                <p class="error" id="error-6"></p>
+            </div>
+            <div class="card">
+                <h3>Relation: E, K, ν</h3>
+                <p class="formula-text"><i>E = 3K(1 - 2ν)</i></p>
+                <div class="select-container">
+                    <label for="select-7">Calculate for: </label>
+                    <select id="select-7"></select>
+                </div>
+                <div class="inputs-container" id="inputs-7"></div>
+                <button id="btn-7">Calculate</button>
+                <p class="error" id="error-7"></p>
+            </div>
+            <div class="card">
+                <h3>Re-entrant Poisson's Ratio (ν_yx)</h3>
+                <p class="formula-text"><i>ν_yx = (h/l + sinθ)sinθ / cos²θ</i></p>
+                <div class="select-container">
+                    <label for="select-8">Calculate for: </label>
+                    <select id="select-8"></select>
+                </div>
+                <div class="inputs-container" id="inputs-8"></div>
+                <button id="btn-8">Calculate</button>
+                <p class="error" id="error-8"></p>
+            </div>
+            <div class="card">
+                <h3>Re-entrant Young's Modulus (E_y)</h3>
+                <p class="formula-text"><i>E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]</i></p>
+                <div class="select-container">
+                    <label for="select-9">Calculate for: </label>
+                    <select id="select-9"></select>
+                </div>
+                <div class="inputs-container" id="inputs-9"></div>
+                <button id="btn-9">Calculate</button>
+                <p class="error" id="error-9"></p>
+            </div>
         </div>
     </main>
-
     <footer class="footer-container">
         <p>osman ehad tarafından geliştirildi</p>
     </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const calculatorGrid = document.getElementById('calculator-grid');
-            if (!calculatorGrid) return;
-
             const formulas = [
                 {
-                    title: "Stress Definition",
-                    formulaText: "σ = F / A",
                     variables: { 'σ': "Stress (Pa)", 'F': "Force (N)", 'A': "Area (m²)" },
-                    solvers: {
-                        'σ': (v) => v.A === 0 ? "Area cannot be zero" : v.F / v.A,
-                        'F': (v) => v.σ * v.A,
-                        'A': (v) => v.σ === 0 ? "Stress cannot be zero" : v.F / v.σ
-                    }
+                    solvers: { 'σ': (v) => v.A === 0 ? "Area cannot be zero" : v.F / v.A, 'F': (v) => v.σ * v.A, 'A': (v) => v.σ === 0 ? "Stress cannot be zero" : v.F / v.σ }
                 },
                 {
-                    title: "Strain Definition",
-                    formulaText: "ε = ΔL / L₀",
                     variables: { 'ε': "Strain", 'ΔL': "Change in Length (m)", 'L₀': "Original Length (m)" },
-                    solvers: {
-                        'ε': (v) => v.L₀ === 0 ? "Original Length cannot be zero" : v.ΔL / v.L₀,
-                        'ΔL': (v) => v.ε * v.L₀,
-                        'L₀': (v) => v.ε === 0 ? "Strain cannot be zero" : v.ΔL / v.ε
-                    }
+                    solvers: { 'ε': (v) => v.L₀ === 0 ? "Original Length cannot be zero" : v.ΔL / v.L₀, 'ΔL': (v) => v.ε * v.L₀, 'L₀': (v) => v.ε === 0 ? "Strain cannot be zero" : v.ΔL / v.ε }
                 },
                 {
-                    title: "Young's Modulus (Hooke's Law)",
-                    formulaText: "E = σ / ε",
                     variables: { 'E': "Young's Modulus (Pa)", 'σ': "Stress (Pa)", 'ε': "Strain" },
-                    solvers: {
-                        'E': (v) => v.ε === 0 ? "Strain cannot be zero" : v.σ / v.ε,
-                        'σ': (v) => v.E * v.ε,
-                        'ε': (v) => v.E === 0 ? "Young's Modulus cannot be zero" : v.σ / v.E
-                    }
+                    solvers: { 'E': (v) => v.ε === 0 ? "Strain cannot be zero" : v.σ / v.ε, 'σ': (v) => v.E * v.ε, 'ε': (v) => v.E === 0 ? "Young's Modulus cannot be zero" : v.σ / v.E }
                 },
                 {
-                    title: "Poisson's Ratio",
-                    formulaText: "ν = -ε_trans / ε_axial",
                     variables: { 'ν': "Poisson's Ratio", 'ε_trans': "Transverse Strain", 'ε_axial': "Axial Strain" },
-                    solvers: {
-                        'ν': (v) => v.ε_axial === 0 ? "Axial Strain cannot be zero" : -v.ε_trans / v.ε_axial,
-                        'ε_trans': (v) => -v.ν * v.ε_axial,
-                        'ε_axial': (v) => v.ν === 0 ? "Poisson's Ratio cannot be zero" : -v.ε_trans / v.ν
-                    }
+                    solvers: { 'ν': (v) => v.ε_axial === 0 ? "Axial Strain cannot be zero" : -v.ε_trans / v.ε_axial, 'ε_trans': (v) => -v.ν * v.ε_axial, 'ε_axial': (v) => v.ν === 0 ? "Poisson's Ratio cannot be zero" : -v.ε_trans / v.ν }
                 },
                 {
-                    title: "Shear Modulus",
-                    formulaText: "G = τ / γ",
                     variables: { 'G': "Shear Modulus (Pa)", 'τ': "Shear Stress (Pa)", 'γ': "Shear Strain" },
-                    solvers: {
-                        'G': (v) => v.γ === 0 ? "Shear Strain cannot be zero" : v.τ / v.γ,
-                        'τ': (v) => v.G * v.γ,
-                        'γ': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : v.τ / v.γ
-                    }
+                    solvers: { 'G': (v) => v.γ === 0 ? "Shear Strain cannot be zero" : v.τ / v.γ, 'τ': (v) => v.G * v.γ, 'γ': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : v.τ / v.γ }
                 },
                 {
-                    title: "Bulk Modulus",
-                    formulaText: "K = P / (ΔV/V)",
                     variables: { 'K': "Bulk Modulus (Pa)", 'P': "Pressure (Pa)", 'ΔV/V': "Volumetric Strain" },
-                    solvers: {
-                        'K': (v) => v['ΔV/V'] === 0 ? "Volumetric Strain cannot be zero" : v.P / v['ΔV/V'],
-                        'P': (v) => v.K * v['ΔV/V'],
-                        'ΔV/V': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : v.P / v.K
-                    }
+                    solvers: { 'K': (v) => v['ΔV/V'] === 0 ? "Volumetric Strain cannot be zero" : v.P / v['ΔV/V'], 'P': (v) => v.K * v['ΔV/V'], 'ΔV/V': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : v.P / v.K }
                 },
                 {
-                    title: "Relation: E, G, ν",
-                    formulaText: "E = 2G(1 + ν)",
                     variables: { 'E': "Young's Modulus (Pa)", 'G': "Shear Modulus (Pa)", 'ν': "Poisson's Ratio" },
-                    solvers: {
-                        'E': (v) => 2 * v.G * (1 + v.ν),
-                        'G': (v) => (1 + v.ν) === 0 ? "1+ν cannot be zero" : v.E / (2 * (1 + v.ν)),
-                        'ν': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : (v.E / (2 * v.G)) - 1
-                    }
+                    solvers: { 'E': (v) => 2 * v.G * (1 + v.ν), 'G': (v) => (1 + v.ν) === 0 ? "1+ν cannot be zero" : v.E / (2 * (1 + v.ν)), 'ν': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : (v.E / (2 * v.G)) - 1 }
                 },
                 {
-                    title: "Relation: E, K, ν",
-                    formulaText: "E = 3K(1 - 2ν)",
                     variables: { 'E': "Young's Modulus (Pa)", 'K': "Bulk Modulus (Pa)", 'ν': "Poisson's Ratio" },
-                    solvers: {
-                        'E': (v) => 3 * v.K * (1 - 2 * v.ν),
-                        'K': (v) => (1 - 2 * v.ν) === 0 ? "1-2ν cannot be zero" : v.E / (3 * (1 - 2 * v.ν)),
-                        'ν': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : 0.5 * (1 - v.E / (3 * v.K))
-                    }
+                    solvers: { 'E': (v) => 3 * v.K * (1 - 2 * v.ν), 'K': (v) => (1 - 2 * v.ν) === 0 ? "1-2ν cannot be zero" : v.E / (3 * (1 - 2 * v.ν)), 'ν': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : 0.5 * (1 - v.E / (3 * v.K)) }
                 },
                 {
-                    title: "Re-entrant Poisson's Ratio (ν_yx)",
-                    formulaText: "ν_yx = (h/l + sinθ)sinθ / cos²θ",
                     variables: { 'ν_yx': "Poisson's Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
-                    solvers: {
-                        'ν_yx': (v) => {
-                            const theta_rad = v.θ * (Math.PI / 180);
-                            const sin_theta = Math.sin(theta_rad);
-                            const cos_theta = Math.cos(theta_rad);
-                            if (cos_theta === 0) return "Angle cannot be 90 degrees.";
-                            return ((v['h/l'] + sin_theta) * sin_theta) / (cos_theta * cos_theta);
-                        },
-                        'h/l': (v) => {
-                            const theta_rad = v.θ * (Math.PI / 180);
-                            const sin_theta = Math.sin(theta_rad);
-                            const cos_theta = Math.cos(theta_rad);
-                            if (sin_theta === 0) return "Angle cannot be 0 or 180 degrees.";
-                            return (v.ν_yx * cos_theta * cos_theta / sin_theta) - sin_theta;
-                        },
-                         'θ': (v) => "Solving for θ is non-trivial and not implemented."
-                    }
+                    solvers: { 'ν_yx': (v) => { const t = v.θ * Math.PI / 180; return (v['h/l'] + Math.sin(t)) * Math.sin(t) / (Math.cos(t) * Math.cos(t)); }, 'h/l': (v) => { const t = v.θ * Math.PI / 180; return (v.ν_yx * Math.cos(t) * Math.cos(t) / Math.sin(t)) - Math.sin(t); }, 'θ': (v) => "Not implemented." }
                 },
                 {
-                    title: "Re-entrant Young's Modulus (E_y)",
-                    formulaText: "E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]",
                     variables: { 'E_y': "Effective Modulus (Pa)", 'E_s': "Solid Modulus (Pa)", 't/l': "t/l Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
-                    solvers: {
-                        'E_y': (v) => {
-                            const theta_rad = v.θ * (Math.PI / 180);
-                            const sin_theta = Math.sin(theta_rad);
-                            const cos_theta = Math.cos(theta_rad);
-                            if (sin_theta === 0 || (v['h/l'] + sin_theta) === 0) return "Invalid geometric inputs.";
-                            return (v.E_s * Math.pow(v['t/l'], 3) * cos_theta) / ((v['h/l'] + sin_theta) * sin_theta * sin_theta);
-                        },
-                        'E_s': (v) => {
-                            const theta_rad = v.θ * (Math.PI / 180);
-                            const sin_theta = Math.sin(theta_rad);
-                            const cos_theta = Math.cos(theta_rad);
-                            if (Math.pow(v['t/l'], 3) * cos_theta === 0) return "Invalid geometric inputs.";
-                            return (v.E_y * (v['h/l'] + sin_theta) * sin_theta * sin_theta) / (Math.pow(v['t/l'], 3) * cos_theta);
-                        },
-                         't/l': (v) => "Not implemented.",
-                         'h/l': (v) => "Not implemented.",
-                         'θ': (v) => "Not implemented."
-                    }
+                    solvers: { 'E_y': (v) => { const t = v.θ * Math.PI / 180; return (v.E_s * Math.pow(v['t/l'], 3) * Math.cos(t)) / ((v['h/l'] + Math.sin(t)) * Math.sin(t) * Math.sin(t)); }, 'E_s': (v) => { const t = v.θ * Math.PI / 180; return (v.E_y * (v['h/l'] + Math.sin(t)) * Math.sin(t) * Math.sin(t)) / (Math.pow(v['t/l'], 3) * Math.cos(t)); }, 't/l': (v) => "Not implemented.", 'h/l': (v) => "Not implemented.", 'θ': (v) => "Not implemented." }
                 }
             ];
 
             formulas.forEach((formula, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <h3>${formula.title}</h3>
-                    <p class="formula-text"><i>${formula.formulaText}</i></p>
-                    <div class="select-container">
-                        <label for="select-${index}">Calculate for: </label>
-                        <select id="select-${index}"></select>
-                    </div>
-                    <div class="inputs-container" id="inputs-${index}"></div>
-                    <button id="btn-${index}">Calculate</button>
-                    <p class="error" id="error-${index}"></p>
-                `;
+                setupCard(index, formula);
+            });
 
-                const selectElement = card.querySelector(`#select-${index}`);
+            function setupCard(index, formula) {
+                const selectElement = document.getElementById(`select-${index}`);
+                const inputsWrapper = document.getElementById(`inputs-${index}`);
+                const button = document.getElementById(`btn-${index}`);
+                const errorP = document.getElementById(`error-${index}`);
+
                 const variables = Object.keys(formula.variables);
                 variables.forEach(variable => {
                     const option = document.createElement('option');
@@ -192,43 +204,28 @@
                     selectElement.appendChild(option);
                 });
 
-                calculatorGrid.appendChild(card);
-                setupCard(index, formula);
-            });
-
-
-            function setupCard(index, formula) {
-                const selectElement = document.getElementById(`select-${index}`);
-                const inputsWrapper = document.getElementById(`inputs-${index}`);
-                const button = document.getElementById(`btn-${index}`);
-                const errorP = document.getElementById(`error-${index}`);
-
                 function updateInputs() {
                     inputsWrapper.innerHTML = '';
                     const targetVar = selectElement.value;
-                    const variables = Object.keys(formula.variables);
-
                     variables.forEach(variable => {
-                        const inputGroup = document.createElement('div');
-                        inputGroup.className = 'input-group';
-                        const label = document.createElement('label');
-                        label.textContent = `${formula.variables[variable]}:`;
-                        const input = document.createElement('input');
-                        input.type = 'number';
-                        input.id = `input-${index}-${variable}`;
-                        label.htmlFor = input.id;
-
+                        const iG = document.createElement('div');
+                        iG.className = 'input-group';
+                        const l = document.createElement('label');
+                        l.textContent = `${formula.variables[variable]}:`;
+                        const i = document.createElement('input');
+                        i.type = 'number';
+                        i.id = `input-${index}-${variable}`;
+                        l.htmlFor = i.id;
                         if (variable === targetVar) {
-                            input.disabled = true;
-                            input.placeholder = "Result";
-                            input.classList.add('result-input');
+                            i.disabled = true;
+                            i.placeholder = "Result";
+                            i.classList.add('result-input');
                         } else {
-                            input.placeholder = `Enter value`;
+                            i.placeholder = `Enter value`;
                         }
-
-                        inputGroup.appendChild(label);
-                        inputGroup.appendChild(input);
-                        inputsWrapper.appendChild(inputGroup);
+                        iG.appendChild(l);
+                        iG.appendChild(i);
+                        inputsWrapper.appendChild(iG);
                     });
                 }
 
@@ -236,37 +233,30 @@
                     const targetVar = selectElement.value;
                     const solver = formula.solvers[targetVar];
                     errorP.textContent = '';
-
                     const values = {};
                     let hasEmpty = false;
-                    Object.keys(formula.variables).forEach(variable => {
+                    variables.forEach(variable => {
                         if (variable !== targetVar) {
                             const inputElement = document.getElementById(`input-${index}-${variable}`);
                             if (!inputElement.value) hasEmpty = true;
                             values[variable] = parseFloat(inputElement.value);
                         }
                     });
-
                     if(hasEmpty) {
                         errorP.textContent = "Please fill in all required fields.";
                         return;
                     }
-
                     const result = solver(values);
-
                     if (typeof result === 'string') {
                         errorP.textContent = result;
                     } else {
-                        const resultInput = document.getElementById(`input-${index}-${targetVar}`);
-                        resultInput.value = result.toFixed(4);
+                        document.getElementById(`input-${index}-${targetVar}`).value = result.toFixed(4);
                     }
                 });
-
                 selectElement.addEventListener('change', updateInputs);
                 updateInputs();
             }
         });
     </script>
-
 </body>
 </html>
