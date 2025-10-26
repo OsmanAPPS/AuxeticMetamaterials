@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!calculatorGrid) return;
 
     const formulas = [
-        // ... (The full formulas array)
         {
             title: "Stress Definition",
             formulaText: "σ = F / A",
@@ -184,8 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.id = `input-${index}-${variable}`;
-
-                // **CRITICAL FIX HERE**
                 label.htmlFor = input.id;
 
                 if (variable === targetVar) {
