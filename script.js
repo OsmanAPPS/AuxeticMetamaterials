@@ -1,167 +1,245 @@
 document.addEventListener('DOMContentLoaded', () => {
     const calculatorGrid = document.getElementById('calculator-grid');
-    if (!calculatorGrid) return; // Sadece hesaplama sayfasında çalışmasını sağla
+    if (!calculatorGrid) return;
 
     const formulas = [
-    {
-      title: 'Poisson\'s Ratio (General)',
-      inputs: ['Transverse Strain', 'Axial Strain'],
-      calculate: (inputs) => {
-        const [transverse, axial] = inputs.map(parseFloat);
-        if (axial === 0) return 'Axial Strain cannot be zero.';
-        return -transverse / axial;
-      },
-      formulaText: 'ν = -ε_trans / ε_axial'
-    },
-    {
-      title: 'Young\'s Modulus (Elasticity)',
-      inputs: ['Stress (σ)', 'Strain (ε)'],
-      calculate: (inputs) => {
-        const [stress, strain] = inputs.map(parseFloat);
-        if (strain === 0) return 'Strain cannot be zero.';
-        return stress / strain;
-      },
-      formulaText: 'E = σ / ε'
-    },
-    {
-        title: 'Shear Modulus (Rigidity)',
-        inputs: ['Shear Stress (τ)', 'Shear Strain (γ)'],
-        calculate: (inputs) => {
-            const [stress, strain] = inputs.map(parseFloat);
-            if (strain === 0) return 'Shear Strain cannot be zero.';
-            return stress / strain;
+        // ... (The full formulas array)
+        {
+            title: "Stress Definition",
+            formulaText: "σ = F / A",
+            variables: { 'σ': "Stress (Pa)", 'F': "Force (N)", 'A': "Area (m²)" },
+            solvers: {
+                'σ': (v) => v.A === 0 ? "Area cannot be zero" : v.F / v.A,
+                'F': (v) => v.σ * v.A,
+                'A': (v) => v.σ === 0 ? "Stress cannot be zero" : v.F / v.σ,
+            }
         },
-        formulaText: 'G = τ / γ'
-    },
-    {
-        title: 'Bulk Modulus',
-        inputs: ['Pressure (P)', 'Volumetric Strain (ΔV/V)'],
-        calculate: (inputs) => {
-            const [pressure, volStrain] = inputs.map(parseFloat);
-            if (volStrain === 0) return 'Volumetric Strain cannot be zero.';
-            return pressure / volStrain;
+        {
+            title: "Strain Definition",
+            formulaText: "ε = ΔL / L₀",
+            variables: { 'ε': "Strain", 'ΔL': "Change in Length (m)", 'L₀': "Original Length (m)" },
+            solvers: {
+                'ε': (v) => v.L₀ === 0 ? "Original Length cannot be zero" : v.ΔL / v.L₀,
+                'ΔL': (v) => v.ε * v.L₀,
+                'L₀': (v) => v.ε === 0 ? "Strain cannot be zero" : v.ΔL / v.ε,
+            }
         },
-        formulaText: 'K = P / (ΔV/V)'
-    },
-    {
-        title: 'Strain (ε)',
-        inputs: ['Change in Length (ΔL)', 'Original Length (L₀)'],
-        calculate: (inputs) => {
-            const [deltaL, initialL] = inputs.map(parseFloat);
-            if (initialL === 0) return 'Original Length cannot be zero.';
-            return deltaL / initialL;
+        {
+            title: "Young's Modulus (Hooke's Law)",
+            formulaText: "E = σ / ε",
+            variables: { 'E': "Young's Modulus (Pa)", 'σ': "Stress (Pa)", 'ε': "Strain" },
+            solvers: {
+                'E': (v) => v.ε === 0 ? "Strain cannot be zero" : v.σ / v.ε,
+                'σ': (v) => v.E * v.ε,
+                'ε': (v) => v.E === 0 ? "Young's Modulus cannot be zero" : v.σ / v.E,
+            }
         },
-        formulaText: 'ε = ΔL / L₀'
-    },
-    {
-        title: 'Stress (σ)',
-        inputs: ['Force (F)', 'Area (A)'],
-        calculate: (inputs) => {
-            const [force, area] = inputs.map(parseFloat);
-            if (area === 0) return 'Area cannot be zero.';
-            return force / area;
+        {
+            title: "Poisson's Ratio",
+            formulaText: "ν = -ε_trans / ε_axial",
+            variables: { 'ν': "Poisson's Ratio", 'ε_trans': "Transverse Strain", 'ε_axial': "Axial Strain" },
+            solvers: {
+                'ν': (v) => v.ε_axial === 0 ? "Axial Strain cannot be zero" : -v.ε_trans / v.ε_axial,
+                'ε_trans': (v) => -v.ν * v.ε_axial,
+                'ε_axial': (v) => v.ν === 0 ? "Poisson's Ratio cannot be zero" : -v.ε_trans / v.ν,
+            }
         },
-        formulaText: 'σ = F / A'
-    },
-    {
-        title: 'Relation 1: E, G, ν',
-        inputs: ['Shear Modulus (G)', 'Poisson\'s Ratio (ν)'],
-        calculate: (inputs) => {
-            const [g, v] = inputs.map(parseFloat);
-            return 2 * g * (1 + v);
+        {
+            title: "Shear Modulus",
+            formulaText: "G = τ / γ",
+            variables: { 'G': "Shear Modulus (Pa)", 'τ': "Shear Stress (Pa)", 'γ': "Shear Strain" },
+            solvers: {
+                'G': (v) => v.γ === 0 ? "Shear Strain cannot be zero" : v.τ / v.γ,
+                'τ': (v) => v.G * v.γ,
+                'γ': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : v.τ / v.γ,
+            }
         },
-        formulaText: 'E = 2G(1 + ν)'
-    },
-    {
-        title: 'Relation 2: E, K, ν',
-        inputs: ['Bulk Modulus (K)', 'Poisson\'s Ratio (ν)'],
-        calculate: (inputs) => {
-            const [k, v] = inputs.map(parseFloat);
-            return 3 * k * (1 - 2 * v);
+        {
+            title: "Bulk Modulus",
+            formulaText: "K = P / (ΔV/V)",
+            variables: { 'K': "Bulk Modulus (Pa)", 'P': "Pressure (Pa)", 'ΔV/V': "Volumetric Strain" },
+            solvers: {
+                'K': (v) => v['ΔV/V'] === 0 ? "Volumetric Strain cannot be zero" : v.P / v['ΔV/V'],
+                'P': (v) => v.K * v['ΔV/V'],
+                'ΔV/V': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : v.P / v.K,
+            }
         },
-        formulaText: 'E = 3K(1 - 2ν)'
-    },
-    {
-        title: 'Re-entrant Honeycomb Poisson\'s Ratio',
-        inputs: ['h/l ratio', 'Angle θ (degrees)'],
-        calculate: (inputs) => {
-            const [h_l_ratio, theta_deg] = inputs.map(parseFloat);
-            const theta_rad = theta_deg * (Math.PI / 180);
-            const sin_theta = Math.sin(theta_rad);
-            const cos_theta = Math.cos(theta_rad);
-            if (sin_theta === 0) return 'Sine of the angle cannot be zero.';
-            return (h_l_ratio + sin_theta) * sin_theta / (cos_theta * cos_theta);
+        {
+            title: "Relation: E, G, ν",
+            formulaText: "E = 2G(1 + ν)",
+            variables: { 'E': "Young's Modulus (Pa)", 'G': "Shear Modulus (Pa)", 'ν': "Poisson's Ratio" },
+            solvers: {
+                'E': (v) => 2 * v.G * (1 + v.ν),
+                'G': (v) => (1 + v.ν) === 0 ? "1+ν cannot be zero" : v.E / (2 * (1 + v.ν)),
+                'ν': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : (v.E / (2 * v.G)) - 1,
+            }
         },
-        formulaText: 'ν_yx = (h/l + sinθ)sinθ / cos²θ'
-    },
-    {
-        title: 'Re-entrant Honeycomb Young\'s Modulus',
-        inputs: ['h/l ratio', 'Angle θ (degrees)', 'Solid Modulus (Es)', 't/l ratio'],
-        calculate: (inputs) => {
-            const [h_l_ratio, theta_deg, es, t_l_ratio] = inputs.map(parseFloat);
-            const theta_rad = theta_deg * (Math.PI / 180);
-            const sin_theta = Math.sin(theta_rad);
-            const cos_theta = Math.cos(theta_rad);
-            if(cos_theta === 0 || sin_theta === 0) return 'Angle cannot be 0 or 90 degrees.';
-            return (es * Math.pow(t_l_ratio, 3) * cos_theta) / ((h_l_ratio + sin_theta) * sin_theta * sin_theta);
+        {
+            title: "Relation: E, K, ν",
+            formulaText: "E = 3K(1 - 2ν)",
+            variables: { 'E': "Young's Modulus (Pa)", 'K': "Bulk Modulus (Pa)", 'ν': "Poisson's Ratio" },
+            solvers: {
+                'E': (v) => 3 * v.K * (1 - 2 * v.ν),
+                'K': (v) => (1 - 2 * v.ν) === 0 ? "1-2ν cannot be zero" : v.E / (3 * (1 - 2 * v.ν)),
+                'ν': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : 0.5 * (1 - v.E / (3 * v.K)),
+            }
         },
-        formulaText: 'E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]'
-    }
+        {
+            title: "Re-entrant Poisson's Ratio (ν_yx)",
+            formulaText: "ν_yx = (h/l + sinθ)sinθ / cos²θ",
+            variables: { 'ν_yx': "Poisson's Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
+            solvers: {
+                'ν_yx': (v) => {
+                    const theta_rad = v.θ * (Math.PI / 180);
+                    const sin_theta = Math.sin(theta_rad);
+                    const cos_theta = Math.cos(theta_rad);
+                    if (cos_theta === 0) return "Angle cannot be 90 degrees.";
+                    return ((v['h/l'] + sin_theta) * sin_theta) / (cos_theta * cos_theta);
+                },
+                'h/l': (v) => {
+                    const theta_rad = v.θ * (Math.PI / 180);
+                    const sin_theta = Math.sin(theta_rad);
+                    const cos_theta = Math.cos(theta_rad);
+                    if (sin_theta === 0) return "Angle cannot be 0 or 180 degrees.";
+                    return (v.ν_yx * cos_theta * cos_theta / sin_theta) - sin_theta;
+                },
+                 'θ': (v) => "Solving for θ is non-trivial and not implemented.",
+            }
+        },
+        {
+            title: "Re-entrant Young's Modulus (E_y)",
+            formulaText: "E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]",
+            variables: { 'E_y': "Effective Modulus (Pa)", 'E_s': "Solid Modulus (Pa)", 't/l': "t/l Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
+            solvers: {
+                'E_y': (v) => {
+                    const theta_rad = v.θ * (Math.PI / 180);
+                    const sin_theta = Math.sin(theta_rad);
+                    const cos_theta = Math.cos(theta_rad);
+                    if (sin_theta === 0 || (v['h/l'] + sin_theta) === 0) return "Invalid geometric inputs.";
+                    return (v.E_s * Math.pow(v['t/l'], 3) * cos_theta) / ((v['h/l'] + sin_theta) * sin_theta * sin_theta);
+                },
+                'E_s': (v) => {
+                    const theta_rad = v.θ * (Math.PI / 180);
+                    const sin_theta = Math.sin(theta_rad);
+                    const cos_theta = Math.cos(theta_rad);
+                    if (Math.pow(v['t/l'], 3) * cos_theta === 0) return "Invalid geometric inputs.";
+                    return (v.E_y * (v['h/l'] + sin_theta) * sin_theta * sin_theta) / (Math.pow(v['t/l'], 3) * cos_theta);
+                },
+                 't/l': (v) => "Not implemented.", 'h/l': (v) => "Not implemented.", 'θ': (v) => "Not implemented.",
+            }
+        },
     ];
 
-    formulas.forEach((formula, i) => {
+    formulas.forEach((formula, index) => {
         const card = document.createElement('div');
         card.className = 'card';
 
-        let inputHTML = '';
-        formula.inputs.forEach((label, j) => {
-            const inputId = `input-${i}-${j}`;
-            inputHTML += `
-                <div class="input-group">
-                    <label for="${inputId}">${label}:</label>
-                    <input type="number" id="${inputId}" placeholder="Enter ${label}">
-                </div>
-            `;
+        const selectContainer = document.createElement('div');
+        selectContainer.className = 'select-container';
+        const selectLabel = document.createElement('label');
+        selectLabel.textContent = 'Calculate for: ';
+        const select = document.createElement('select');
+        select.id = `select-${index}`;
+
+        const variables = Object.keys(formula.variables);
+        variables.forEach(variable => {
+            const option = document.createElement('option');
+            option.value = variable;
+            option.textContent = formula.variables[variable];
+            select.appendChild(option);
         });
+
+        selectContainer.appendChild(selectLabel);
+        selectContainer.appendChild(select);
+
+        const inputsContainer = document.createElement('div');
+        inputsContainer.className = 'inputs-container';
+        inputsContainer.id = `inputs-${index}`;
 
         card.innerHTML = `
             <h3>${formula.title}</h3>
             <p class="formula-text"><i>${formula.formulaText}</i></p>
-            <div class="inputs-container">${inputHTML}</div>
-            <button id="btn-${i}">Calculate</button>
-            <p class="error" id="error-${i}"></p>
-            <p class="result" id="result-${i}"></p>
+            ${selectContainer.outerHTML}
+            ${inputsContainer.outerHTML}
+            <button id="btn-${index}">Calculate</button>
+            <p class="error" id="error-${index}"></p>
         `;
 
         calculatorGrid.appendChild(card);
 
-        const calculateButton = document.getElementById(`btn-${i}`);
-        calculateButton.addEventListener('click', () => {
-            const inputValues = formula.inputs.map((_, j) => {
-                return document.getElementById(`input-${i}-${j}`).value;
+        const selectElement = document.getElementById(`select-${index}`);
+        const inputsWrapper = document.getElementById(`inputs-${index}`);
+
+        function updateInputs() {
+            inputsWrapper.innerHTML = '';
+            const targetVar = selectElement.value;
+
+            variables.forEach(variable => {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group';
+
+                const label = document.createElement('label');
+                label.textContent = `${formula.variables[variable]}:`;
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `input-${index}-${variable}`;
+
+                // **CRITICAL FIX HERE**
+                label.htmlFor = input.id;
+
+                if (variable === targetVar) {
+                    input.disabled = true;
+                    input.placeholder = "Result";
+                    input.classList.add('result-input');
+                } else {
+                    input.placeholder = `Enter value`;
+                }
+
+                inputGroup.appendChild(label);
+                inputGroup.appendChild(input);
+                inputsWrapper.appendChild(inputGroup);
+            });
+        }
+
+        selectElement.addEventListener('change', updateInputs);
+
+        document.getElementById(`btn-${index}`).addEventListener('click', () => {
+            const targetVar = selectElement.value;
+            const solver = formula.solvers[targetVar];
+            const errorP = document.getElementById(`error-${index}`);
+            errorP.textContent = '';
+
+            if (typeof solver !== 'function') {
+                errorP.textContent = `Calculation for ${formula.variables[targetVar]} is not implemented.`;
+                return;
+            }
+
+            const values = {};
+            let hasEmpty = false;
+            variables.forEach(variable => {
+                if (variable !== targetVar) {
+                    const inputElement = document.getElementById(`input-${index}-${variable}`);
+                    if (!inputElement.value) hasEmpty = true;
+                    values[variable] = parseFloat(inputElement.value);
+                }
             });
 
-            const errorP = document.getElementById(`error-${i}`);
-            const resultP = document.getElementById(`result-${i}`);
-            errorP.textContent = '';
-            resultP.textContent = '';
-
-            if (inputValues.some(val => val === '')) {
-                errorP.textContent = 'Please fill in all input fields.';
-                return;
-            }
-            if (inputValues.some(val => isNaN(parseFloat(val)))) {
-                errorP.textContent = 'Please enter valid numbers.';
+            if(hasEmpty) {
+                errorP.textContent = "Please fill in all required fields.";
                 return;
             }
 
-            const calculationResult = formula.calculate(inputValues);
+            const result = solver(values);
 
-            if (typeof calculationResult === 'string') {
-                errorP.textContent = calculationResult;
+            if (typeof result === 'string') {
+                errorP.textContent = result;
             } else {
-                resultP.textContent = `Result: ${calculationResult.toFixed(4)}`;
+                const resultInput = document.getElementById(`input-${index}-${targetVar}`);
+                resultInput.value = result.toFixed(4);
             }
         });
+
+        updateInputs();
     });
 });
