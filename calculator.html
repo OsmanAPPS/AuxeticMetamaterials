@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auxetic Metamaterials - Hesaplama</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -31,6 +34,263 @@
         <p>osman ehad tarafından geliştirildi</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const calculatorGrid = document.getElementById('calculator-grid');
+            if (!calculatorGrid) return;
+
+            const formulas = [
+                {
+                    title: "Stress Definition",
+                    formulaText: "σ = F / A",
+                    variables: { 'σ': "Stress (Pa)", 'F': "Force (N)", 'A': "Area (m²)" },
+                    solvers: {
+                        'σ': (v) => v.A === 0 ? "Area cannot be zero" : v.F / v.A,
+                        'F': (v) => v.σ * v.A,
+                        'A': (v) => v.σ === 0 ? "Stress cannot be zero" : v.F / v.σ
+                    }
+                },
+                {
+                    title: "Strain Definition",
+                    formulaText: "ε = ΔL / L₀",
+                    variables: { 'ε': "Strain", 'ΔL': "Change in Length (m)", 'L₀': "Original Length (m)" },
+                    solvers: {
+                        'ε': (v) => v.L₀ === 0 ? "Original Length cannot be zero" : v.ΔL / v.L₀,
+                        'ΔL': (v) => v.ε * v.L₀,
+                        'L₀': (v) => v.ε === 0 ? "Strain cannot be zero" : v.ΔL / v.ε
+                    }
+                },
+                {
+                    title: "Young's Modulus (Hooke's Law)",
+                    formulaText: "E = σ / ε",
+                    variables: { 'E': "Young's Modulus (Pa)", 'σ': "Stress (Pa)", 'ε': "Strain" },
+                    solvers: {
+                        'E': (v) => v.ε === 0 ? "Strain cannot be zero" : v.σ / v.ε,
+                        'σ': (v) => v.E * v.ε,
+                        'ε': (v) => v.E === 0 ? "Young's Modulus cannot be zero" : v.σ / v.E
+                    }
+                },
+                {
+                    title: "Poisson's Ratio",
+                    formulaText: "ν = -ε_trans / ε_axial",
+                    variables: { 'ν': "Poisson's Ratio", 'ε_trans': "Transverse Strain", 'ε_axial': "Axial Strain" },
+                    solvers: {
+                        'ν': (v) => v.ε_axial === 0 ? "Axial Strain cannot be zero" : -v.ε_trans / v.ε_axial,
+                        'ε_trans': (v) => -v.ν * v.ε_axial,
+                        'ε_axial': (v) => v.ν === 0 ? "Poisson's Ratio cannot be zero" : -v.ε_trans / v.ν
+                    }
+                },
+                {
+                    title: "Shear Modulus",
+                    formulaText: "G = τ / γ",
+                    variables: { 'G': "Shear Modulus (Pa)", 'τ': "Shear Stress (Pa)", 'γ': "Shear Strain" },
+                    solvers: {
+                        'G': (v) => v.γ === 0 ? "Shear Strain cannot be zero" : v.τ / v.γ,
+                        'τ': (v) => v.G * v.γ,
+                        'γ': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : v.τ / v.γ
+                    }
+                },
+                {
+                    title: "Bulk Modulus",
+                    formulaText: "K = P / (ΔV/V)",
+                    variables: { 'K': "Bulk Modulus (Pa)", 'P': "Pressure (Pa)", 'ΔV/V': "Volumetric Strain" },
+                    solvers: {
+                        'K': (v) => v['ΔV/V'] === 0 ? "Volumetric Strain cannot be zero" : v.P / v['ΔV/V'],
+                        'P': (v) => v.K * v['ΔV/V'],
+                        'ΔV/V': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : v.P / v.K
+                    }
+                },
+                {
+                    title: "Relation: E, G, ν",
+                    formulaText: "E = 2G(1 + ν)",
+                    variables: { 'E': "Young's Modulus (Pa)", 'G': "Shear Modulus (Pa)", 'ν': "Poisson's Ratio" },
+                    solvers: {
+                        'E': (v) => 2 * v.G * (1 + v.ν),
+                        'G': (v) => (1 + v.ν) === 0 ? "1+ν cannot be zero" : v.E / (2 * (1 + v.ν)),
+                        'ν': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : (v.E / (2 * v.G)) - 1
+                    }
+                },
+                {
+                    title: "Relation: E, K, ν",
+                    formulaText: "E = 3K(1 - 2ν)",
+                    variables: { 'E': "Young's Modulus (Pa)", 'K': "Bulk Modulus (Pa)", 'ν': "Poisson's Ratio" },
+                    solvers: {
+                        'E': (v) => 3 * v.K * (1 - 2 * v.ν),
+                        'K': (v) => (1 - 2 * v.ν) === 0 ? "1-2ν cannot be zero" : v.E / (3 * (1 - 2 * v.ν)),
+                        'ν': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : 0.5 * (1 - v.E / (3 * v.K))
+                    }
+                },
+                {
+                    title: "Re-entrant Poisson's Ratio (ν_yx)",
+                    formulaText: "ν_yx = (h/l + sinθ)sinθ / cos²θ",
+                    variables: { 'ν_yx': "Poisson's Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
+                    solvers: {
+                        'ν_yx': (v) => {
+                            const theta_rad = v.θ * (Math.PI / 180);
+                            const sin_theta = Math.sin(theta_rad);
+                            const cos_theta = Math.cos(theta_rad);
+                            if (cos_theta === 0) return "Angle cannot be 90 degrees.";
+                            return ((v['h/l'] + sin_theta) * sin_theta) / (cos_theta * cos_theta);
+                        },
+                        'h/l': (v) => {
+                            const theta_rad = v.θ * (Math.PI / 180);
+                            const sin_theta = Math.sin(theta_rad);
+                            const cos_theta = Math.cos(theta_rad);
+                            if (sin_theta === 0) return "Angle cannot be 0 or 180 degrees.";
+                            return (v.ν_yx * cos_theta * cos_theta / sin_theta) - sin_theta;
+                        },
+                         'θ': (v) => "Solving for θ is non-trivial and not implemented."
+                    }
+                },
+                {
+                    title: "Re-entrant Young's Modulus (E_y)",
+                    formulaText: "E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]",
+                    variables: { 'E_y': "Effective Modulus (Pa)", 'E_s': "Solid Modulus (Pa)", 't/l': "t/l Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
+                    solvers: {
+                        'E_y': (v) => {
+                            const theta_rad = v.θ * (Math.PI / 180);
+                            const sin_theta = Math.sin(theta_rad);
+                            const cos_theta = Math.cos(theta_rad);
+                            if (sin_theta === 0 || (v['h/l'] + sin_theta) === 0) return "Invalid geometric inputs.";
+                            return (v.E_s * Math.pow(v['t/l'], 3) * cos_theta) / ((v['h/l'] + sin_theta) * sin_theta * sin_theta);
+                        },
+                        'E_s': (v) => {
+                            const theta_rad = v.θ * (Math.PI / 180);
+                            const sin_theta = Math.sin(theta_rad);
+                            const cos_theta = Math.cos(theta_rad);
+                            if (Math.pow(v['t/l'], 3) * cos_theta === 0) return "Invalid geometric inputs.";
+                            return (v.E_y * (v['h/l'] + sin_theta) * sin_theta * sin_theta) / (Math.pow(v['t/l'], 3) * cos_theta);
+                        },
+                         't/l': (v) => "Not implemented.",
+                         'h/l': (v) => "Not implemented.",
+                         'θ': (v) => "Not implemented."
+                    }
+                }
+            ];
+
+            calculatorGrid.innerHTML = '';
+
+            formulas.forEach((formula, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const title = document.createElement('h3');
+                title.textContent = formula.title;
+                card.appendChild(title);
+
+                const formulaText = document.createElement('p');
+                formulaText.className = 'formula-text';
+                formulaText.innerHTML = `<i>${formula.formulaText}</i>`;
+                card.appendChild(formulaText);
+
+                const selectContainer = document.createElement('div');
+                selectContainer.className = 'select-container';
+                const selectLabel = document.createElement('label');
+                selectLabel.textContent = 'Calculate for: ';
+                const select = document.createElement('select');
+                select.id = `select-${index}`;
+
+                const variables = Object.keys(formula.variables);
+                variables.forEach(variable => {
+                    const option = document.createElement('option');
+                    option.value = variable;
+                    option.textContent = formula.variables[variable];
+                    select.appendChild(option);
+                });
+
+                selectContainer.appendChild(selectLabel);
+                selectContainer.appendChild(select);
+                card.appendChild(selectContainer);
+
+                const inputsContainer = document.createElement('div');
+                inputsContainer.className = 'inputs-container';
+                inputsContainer.id = `inputs-${index}`;
+                card.appendChild(inputsContainer);
+
+                const button = document.createElement('button');
+                button.id = `btn-${index}`;
+                button.textContent = 'Calculate';
+                card.appendChild(button);
+
+                const errorP = document.createElement('p');
+                errorP.className = 'error';
+                errorP.id = `error-${index}`;
+                card.appendChild(errorP);
+
+                calculatorGrid.appendChild(card);
+
+                const selectElement = document.getElementById(`select-${index}`);
+                const inputsWrapper = document.getElementById(`inputs-${index}`);
+
+                function updateInputs() {
+                    inputsWrapper.innerHTML = '';
+                    const targetVar = selectElement.value;
+
+                    variables.forEach(variable => {
+                        const inputGroup = document.createElement('div');
+                        inputGroup.className = 'input-group';
+
+                        const label = document.createElement('label');
+                        label.textContent = `${formula.variables[variable]}:`;
+
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.id = `input-${index}-${variable}`;
+                        label.htmlFor = input.id;
+
+                        if (variable === targetVar) {
+                            input.disabled = true;
+                            input.placeholder = "Result";
+                            input.classList.add('result-input');
+                        } else {
+                            input.placeholder = `Enter value`;
+                        }
+
+                        inputGroup.appendChild(label);
+                        inputGroup.appendChild(input);
+                        inputsWrapper.appendChild(inputGroup);
+                    });
+                }
+
+                button.addEventListener('click', () => {
+                    const targetVar = selectElement.value;
+                    const solver = formula.solvers[targetVar];
+                    errorP.textContent = '';
+
+                    if (typeof solver !== 'function') {
+                        errorP.textContent = `Calculation for ${formula.variables[targetVar]} is not implemented.`;
+                        return;
+                    }
+
+                    const values = {};
+                    let hasEmpty = false;
+                    variables.forEach(variable => {
+                        if (variable !== targetVar) {
+                            const inputElement = document.getElementById(`input-${index}-${variable}`);
+                            if (!inputElement.value) hasEmpty = true;
+                            values[variable] = parseFloat(inputElement.value);
+                        }
+                    });
+
+                    if(hasEmpty) {
+                        errorP.textContent = "Please fill in all required fields.";
+                        return;
+                    }
+
+                    const result = solver(values);
+
+                    if (typeof result === 'string') {
+                        errorP.textContent = result;
+                    } else {
+                        const resultInput = document.getElementById(`input-${index}-${targetVar}`);
+                        resultInput.value = result.toFixed(4);
+                    }
+                });
+
+                selectElement.addEventListener('change', updateInputs);
+                updateInputs();
+            });
+        });
+    </script>
 </body>
 </html>
