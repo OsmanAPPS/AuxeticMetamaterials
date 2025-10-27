@@ -23,114 +23,210 @@
     </header>
 
     <main class="container">
-        <h1>Formül Hesaplayıcı (Statik Referans)</h1>
+        <h1>Formül Hesaplayıcı</h1>
         <div id="calculator-grid" class="calculator-grid">
 
-            <!-- Card 0: Stress Definition -->
-            <div class="card">
+            <div class="card" id="card-0">
                 <h3>Stress Definition</h3>
                 <p class="formula-text"><i>σ = F / A</i></p>
-                <div class="input-group"><label>Stress (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Force (N):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Area (m²):</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-0">Calculate for: </label><select id="select-0"></select></div>
+                <div class="inputs-container" id="inputs-0"></div>
+                <button id="btn-0">Calculate</button>
+                <p class="error" id="error-0"></p>
             </div>
-
-            <!-- Card 1: Strain Definition -->
-            <div class="card">
+            <div class="card" id="card-1">
                 <h3>Strain Definition</h3>
                 <p class="formula-text"><i>ε = ΔL / L₀</i></p>
-                <div class="input-group"><label>Strain:</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Change in Length (m):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Original Length (m):</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-1">Calculate for: </label><select id="select-1"></select></div>
+                <div class="inputs-container" id="inputs-1"></div>
+                <button id="btn-1">Calculate</button>
+                <p class="error" id="error-1"></p>
             </div>
-
-            <!-- Card 2: Young's Modulus -->
-            <div class="card">
+            <div class="card" id="card-2">
                 <h3>Young's Modulus (Hooke's Law)</h3>
                 <p class="formula-text"><i>E = σ / ε</i></p>
-                <div class="input-group"><label>Young's Modulus (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Stress (Pa):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Strain:</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-2">Calculate for: </label><select id="select-2"></select></div>
+                <div class="inputs-container" id="inputs-2"></div>
+                <button id="btn-2">Calculate</button>
+                <p class="error" id="error-2"></p>
             </div>
-
-            <!-- Card 3: Poisson's Ratio -->
-            <div class="card">
+            <div class="card" id="card-3">
                 <h3>Poisson's Ratio</h3>
                 <p class="formula-text"><i>ν = -ε_trans / ε_axial</i></p>
-                <div class="input-group"><label>Poisson's Ratio:</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Transverse Strain:</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Axial Strain:</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-3">Calculate for: </label><select id="select-3"></select></div>
+                <div class="inputs-container" id="inputs-3"></div>
+                <button id="btn-3">Calculate</button>
+                <p class="error" id="error-3"></p>
             </div>
-
-            <!-- Card 4: Shear Modulus -->
-            <div class="card">
+            <div class="card" id="card-4">
                 <h3>Shear Modulus</h3>
                 <p class="formula-text"><i>G = τ / γ</i></p>
-                <div class="input-group"><label>Shear Modulus (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Shear Stress (Pa):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Shear Strain:</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-4">Calculate for: </label><select id="select-4"></select></div>
+                <div class="inputs-container" id="inputs-4"></div>
+                <button id="btn-4">Calculate</button>
+                <p class="error" id="error-4"></p>
             </div>
-
-            <!-- Card 5: Bulk Modulus -->
-            <div class="card">
+            <div class="card" id="card-5">
                 <h3>Bulk Modulus</h3>
                 <p class="formula-text"><i>K = P / (ΔV/V)</i></p>
-                <div class="input-group"><label>Bulk Modulus (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Pressure (Pa):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Volumetric Strain:</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-5">Calculate for: </label><select id="select-5"></select></div>
+                <div class="inputs-container" id="inputs-5"></div>
+                <button id="btn-5">Calculate</button>
+                <p class="error" id="error-5"></p>
             </div>
-
-            <!-- Card 6: Relation: E, G, ν -->
-            <div class="card">
+            <div class="card" id="card-6">
                 <h3>Relation: E, G, ν</h3>
                 <p class="formula-text"><i>E = 2G(1 + ν)</i></p>
-                <div class="input-group"><label>Young's Modulus (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Shear Modulus (Pa):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Poisson's Ratio:</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-6">Calculate for: </label><select id="select-6"></select></div>
+                <div class="inputs-container" id="inputs-6"></div>
+                <button id="btn-6">Calculate</button>
+                <p class="error" id="error-6"></p>
             </div>
-
-            <!-- Card 7: Relation: E, K, ν -->
-            <div class="card">
+            <div class="card" id="card-7">
                 <h3>Relation: E, K, ν</h3>
                 <p class="formula-text"><i>E = 3K(1 - 2ν)</i></p>
-                <div class="input-group"><label>Young's Modulus (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Bulk Modulus (Pa):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Poisson's Ratio:</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-7">Calculate for: </label><select id="select-7"></select></div>
+                <div class="inputs-container" id="inputs-7"></div>
+                <button id="btn-7">Calculate</button>
+                <p class="error" id="error-7"></p>
             </div>
-
-            <!-- Card 8: Re-entrant Poisson's Ratio -->
-            <div class="card">
+            <div class="card" id="card-8">
                 <h3>Re-entrant Poisson's Ratio (ν_yx)</h3>
                 <p class="formula-text"><i>ν_yx = (h/l + sinθ)sinθ / cos²θ</i></p>
-                <div class="input-group"><label>Poisson's Ratio:</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>h/l Ratio:</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Angle θ (deg):</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-8">Calculate for: </label><select id="select-8"></select></div>
+                <div class="inputs-container" id="inputs-8"></div>
+                <button id="btn-8">Calculate</button>
+                <p class="error" id="error-8"></p>
             </div>
-
-            <!-- Card 9: Re-entrant Young's Modulus -->
-            <div class="card">
+            <div class="card" id="card-9">
                 <h3>Re-entrant Young's Modulus (E_y)</h3>
                 <p class="formula-text"><i>E_y = E_s(t/l)³ cosθ / [(h/l + sinθ)sin²θ]</i></p>
-                <div class="input-group"><label>Effective Modulus (Pa):</label><input type="number" placeholder="Result" disabled class="result-input"></div>
-                <div class="input-group"><label>Solid Modulus (Pa):</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>t/l Ratio:</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>h/l Ratio:</label><input type="number" placeholder="Enter value"></div>
-                <div class="input-group"><label>Angle θ (deg):</label><input type="number" placeholder="Enter value"></div>
-                <button disabled>Calculate</button>
+                <div class="select-container"><label for="select-9">Calculate for: </label><select id="select-9"></select></div>
+                <div class="inputs-container" id="inputs-9"></div>
+                <button id="btn-9">Calculate</button>
+                <p class="error" id="error-9"></p>
             </div>
         </div>
     </main>
     <footer class="footer-container">
         <p>osman ehad tarafından geliştirildi</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const formulas = [
+                {
+                    variables: { 'σ': "Stress (Pa)", 'F': "Force (N)", 'A': "Area (m²)" },
+                    solvers: { 'σ': (v) => v.A === 0 ? "Area cannot be zero" : v.F / v.A, 'F': (v) => v.σ * v.A, 'A': (v) => v.σ === 0 ? "Stress cannot be zero" : v.F / v.σ }
+                },
+                {
+                    variables: { 'ε': "Strain", 'ΔL': "Change in Length (m)", 'L₀': "Original Length (m)" },
+                    solvers: { 'ε': (v) => v.L₀ === 0 ? "Original Length cannot be zero" : v.ΔL / v.L₀, 'ΔL': (v) => v.ε * v.L₀, 'L₀': (v) => v.ε === 0 ? "Strain cannot be zero" : v.ΔL / v.ε }
+                },
+                {
+                    variables: { 'E': "Young's Modulus (Pa)", 'σ': "Stress (Pa)", 'ε': "Strain" },
+                    solvers: { 'E': (v) => v.ε === 0 ? "Strain cannot be zero" : v.σ / v.ε, 'σ': (v) => v.E * v.ε, 'ε': (v) => v.E === 0 ? "Young's Modulus cannot be zero" : v.σ / v.E }
+                },
+                {
+                    variables: { 'ν': "Poisson's Ratio", 'ε_trans': "Transverse Strain", 'ε_axial': "Axial Strain" },
+                    solvers: { 'ν': (v) => v.ε_axial === 0 ? "Axial Strain cannot be zero" : -v.ε_trans / v.ε_axial, 'ε_trans': (v) => -v.ν * v.ε_axial, 'ε_axial': (v) => v.ν === 0 ? "Poisson's Ratio cannot be zero" : -v.ε_trans / v.ν }
+                },
+                {
+                    variables: { 'G': "Shear Modulus (Pa)", 'τ': "Shear Stress (Pa)", 'γ': "Shear Strain" },
+                    solvers: { 'G': (v) => v.γ === 0 ? "Shear Strain cannot be zero" : v.τ / v.γ, 'τ': (v) => v.G * v.γ, 'γ': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : v.τ / v.γ }
+                },
+                {
+                    variables: { 'K': "Bulk Modulus (Pa)", 'P': "Pressure (Pa)", 'ΔV/V': "Volumetric Strain" },
+                    solvers: { 'K': (v) => v['ΔV/V'] === 0 ? "Volumetric Strain cannot be zero" : v.P / v['ΔV/V'], 'P': (v) => v.K * v['ΔV/V'], 'ΔV/V': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : v.P / v.K }
+                },
+                {
+                    variables: { 'E': "Young's Modulus (Pa)", 'G': "Shear Modulus (Pa)", 'ν': "Poisson's Ratio" },
+                    solvers: { 'E': (v) => 2 * v.G * (1 + v.ν), 'G': (v) => (1 + v.ν) === 0 ? "1+ν cannot be zero" : v.E / (2 * (1 + v.ν)), 'ν': (v) => v.G === 0 ? "Shear Modulus cannot be zero" : (v.E / (2 * v.G)) - 1 }
+                },
+                {
+                    variables: { 'E': "Young's Modulus (Pa)", 'K': "Bulk Modulus (Pa)", 'ν': "Poisson's Ratio" },
+                    solvers: { 'E': (v) => 3 * v.K * (1 - 2 * v.ν), 'K': (v) => (1 - 2 * v.ν) === 0 ? "1-2ν cannot be zero" : v.E / (3 * (1 - 2 * v.ν)), 'ν': (v) => v.K === 0 ? "Bulk Modulus cannot be zero" : 0.5 * (1 - v.E / (3 * v.K)) }
+                },
+                {
+                    variables: { 'ν_yx': "Poisson's Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
+                    solvers: { 'ν_yx': (v) => { const t = v.θ * Math.PI / 180; return (v['h/l'] + Math.sin(t)) * Math.sin(t) / (Math.cos(t) * Math.cos(t)); }, 'h/l': (v) => { const t = v.θ * Math.PI / 180; return (v.ν_yx * Math.cos(t) * Math.cos(t) / Math.sin(t)) - Math.sin(t); }, 'θ': (v) => "Not implemented." }
+                },
+                {
+                    variables: { 'E_y': "Effective Modulus (Pa)", 'E_s': "Solid Modulus (Pa)", 't/l': "t/l Ratio", 'h/l': "h/l Ratio", 'θ': "Angle θ (deg)" },
+                    solvers: { 'E_y': (v) => { const t = v.θ * Math.PI / 180; return (v.E_s * Math.pow(v['t/l'], 3) * Math.cos(t)) / ((v['h/l'] + Math.sin(t)) * Math.sin(t) * Math.sin(t)); }, 'E_s': (v) => { const t = v.θ * Math.PI / 180; return (v.E_y * (v['h/l'] + Math.sin(t)) * Math.sin(t) * Math.sin(t)) / (Math.pow(v['t/l'], 3) * Math.cos(t)); }, 't/l': (v) => "Not implemented.", 'h/l': (v) => "Not implemented.", 'θ': (v) => "Not implemented." }
+                }
+            ];
+
+            formulas.forEach((formula, index) => {
+                setupCard(index, formula);
+            });
+
+            function setupCard(index, formula) {
+                const selectElement = document.getElementById(`select-${index}`);
+                const inputsWrapper = document.getElementById(`inputs-${index}`);
+                const button = document.getElementById(`btn-${index}`);
+                const errorP = document.getElementById(`error-${index}`);
+
+                const variables = Object.keys(formula.variables);
+                variables.forEach(variable => {
+                    const option = document.createElement('option');
+                    option.value = variable;
+                    option.textContent = formula.variables[variable];
+                    selectElement.appendChild(option);
+                });
+
+                function updateInputs() {
+                    inputsWrapper.innerHTML = '';
+                    const targetVar = selectElement.value;
+                    variables.forEach(variable => {
+                        const iG = document.createElement('div');
+                        iG.className = 'input-group';
+                        const l = document.createElement('label');
+                        l.textContent = `${formula.variables[variable]}:`;
+                        const i = document.createElement('input');
+                        i.type = 'number';
+                        i.id = `input-${index}-${variable}`;
+                        l.htmlFor = i.id;
+                        if (variable === targetVar) {
+                            i.disabled = true;
+                            i.placeholder = "Result";
+                            i.classList.add('result-input');
+                        } else {
+                            i.placeholder = `Enter value`;
+                        }
+                        iG.appendChild(l);
+                        iG.appendChild(i);
+                        inputsWrapper.appendChild(iG);
+                    });
+                }
+
+                button.addEventListener('click', () => {
+                    const targetVar = selectElement.value;
+                    const solver = formula.solvers[targetVar];
+                    errorP.textContent = '';
+                    const values = {};
+                    let hasEmpty = false;
+                    variables.forEach(variable => {
+                        if (variable !== targetVar) {
+                            const inputElement = document.getElementById(`input-${index}-${variable}`);
+                            if (!inputElement.value) hasEmpty = true;
+                            values[variable] = parseFloat(inputElement.value);
+                        }
+                    });
+                    if(hasEmpty) {
+                        errorP.textContent = "Please fill in all required fields.";
+                        return;
+                    }
+                    const result = solver(values);
+                    if (typeof result === 'string') {
+                        errorP.textContent = result;
+                    } else {
+                        document.getElementById(`input-${index}-${targetVar}`).value = result.toFixed(4);
+                    }
+                });
+                selectElement.addEventListener('change', updateInputs);
+                updateInputs();
+            }
+        });
+    </script>
 </body>
 </html>
